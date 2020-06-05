@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activitys.MainActivity"
+    android:background="@drawable/background">
+
+
+    <Button
+        android:id="@+id/start"
+        android:layout_width="460px"
+        android:layout_height="140px"
+        android:layout_alignTop="@+id/rule"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="-79dp"
+        android:background="@drawable/button"
+        android:text="Start"
+        android:textSize="22dp"
+        android:textStyle="bold"></Button>
+
+    <Button
+        android:id="@+id/rule"
+        android:layout_width="460px"
+        android:layout_height="140px"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/button"
+        android:text="Rules"
+        android:textSize="22dp"
+        android:textStyle="bold">
+    </Button>
+
+    <Button
+        android:id="@+id/exit"
+        android:layout_width="460px"
+        android:layout_height="140px"
+        android:layout_alignBottom="@+id/rule"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="-81dp"
+        android:background="@drawable/button"
+        android:text="exit"
+        android:textSize="22dp"
+        android:textStyle="bold"></Button>
+
+
+</RelativeLayout>
