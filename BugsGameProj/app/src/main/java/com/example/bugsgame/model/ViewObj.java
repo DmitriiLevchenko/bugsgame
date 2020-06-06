@@ -11,8 +11,8 @@ import com.example.bugsgame.R;
 import com.example.bugsgame.gamelogik.GameView;
 
 public class ViewObj {
-    public float x;
-    public float y;
+    public float x = -1;
+    public float y = -1;
     public float size;
     protected float speed;
     protected int bitmapId;

@@ -55,7 +55,6 @@ public class GameView extends SurfaceView implements Runnable {
         gameThread = new Thread(this);
         gameThread.start();
     }
-
     @Override
     public void run() {
 
@@ -64,7 +63,7 @@ public class GameView extends SurfaceView implements Runnable {
             control();
             update();
             checkifnewBug();
-            checkCollision();
+           // checkCollision();
             control();
             checkTouch();
         }
@@ -75,9 +74,6 @@ public class GameView extends SurfaceView implements Runnable {
         }
 
     }
-
-
-
     private boolean checkTouch() {
         if(previewY != GameStarter.TouchY || previewX != GameStarter.TouchX)
         {
@@ -107,13 +103,16 @@ public class GameView extends SurfaceView implements Runnable {
                     {
                         for(Bug bug:chosedBugs)
                         {
-                            bug.ischecked = false;
+                            bug.Reduild();
+                            Log.d(MainActivity.TAG,"b.Rebuild =" +  b.ischecked + "bugstype =" + b.bugsType);
                         }
                         chosedBugs.clear();
+
                         b.ischecked = true;
                         chosedBugs.add(b);
                     }
                     currentBugtype = b.bugsType;
+                    b.Reduild();
                 }
             }
             if(isdel)
@@ -125,29 +124,21 @@ public class GameView extends SurfaceView implements Runnable {
         }
         return true;
     }
-
     private void removeBugs() {
         for(Bug b:chosedBugs)
         {
-            b.ischecked = false;
             bugs.remove(b);
         }
         chosedBugs.clear();
         currentBugtype = null;
     }
-
     private void checkCollision() {
         for(Bug b:bugs)
         {
            if( b.isCollision(human.x,human.y,human.size))
                gameRunning=false;
-
-
         }
     }
-
-
-
     private void checkifnewBug() {
         if (currenttick == NEWBUGSPAWNTIMER) {
             currenttick = 0;
@@ -155,7 +146,6 @@ public class GameView extends SurfaceView implements Runnable {
         }
         currenttick++;
     }
-
     private void draw() {
         if (surfaceHolder.getSurface().isValid()) {
             if (firstTime) {
@@ -166,9 +156,7 @@ public class GameView extends SurfaceView implements Runnable {
                 firstTime = false;
             }
             canvas = surfaceHolder.lockCanvas();
-
             Bitmap cBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.background3);
-
             Bitmap bitmap = Bitmap.createScaledBitmap(
                     cBitmap, surfaceHolder.getSurfaceFrame().width(), surfaceHolder.getSurfaceFrame().height(), false);
             canvas.drawBitmap(bitmap, 0, 0, null);
