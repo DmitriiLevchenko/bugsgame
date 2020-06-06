@@ -12,8 +12,12 @@
         android:roundIcon="@drawable/icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activitys.GameStarter"></activity>
-        <activity android:name=".activitys.Rule" />
+        <activity android:name=".activitys.GameStarter"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"></activity>
+        <activity android:name=".activitys.Rule"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"/>
         <activity
             android:name=".activitys.MainActivity"
             android:screenOrientation="portrait"

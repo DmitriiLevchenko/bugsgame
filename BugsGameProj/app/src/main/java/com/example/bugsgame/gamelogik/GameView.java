@@ -24,7 +24,8 @@ public class GameView extends SurfaceView implements Runnable {
     public static float unitW = 0;
     public static float unitH = 0;
     private boolean firstTime = true;
-    private boolean gameRunning = true;
+    public static boolean gameRunning = true;
+    public static boolean OverRunning = true;
     private Paint paint;
     private Canvas canvas;
     private SurfaceHolder surfaceHolder;
@@ -33,16 +34,21 @@ public class GameView extends SurfaceView implements Runnable {
     private Human human;
     private Context context;
     private int currenttick = 0;
-    private final int NEWBUGSPAWNTIMER = 25;
+    private  int currentmesagetick = 0;
+    private int MESSAGEINTERVAL = 30;
+    private final int NEWBUGSPAWNTIMER = 12;
 
     public  ArrayList<Bug> chosedBugs = new ArrayList<>();
     public BugsType currentBugtype = null;
 
     private float previewX;
     private float previewY;
+    private boolean isdel = false;
 
     public GameView(Context context) {
         super(context);
+        gameRunning = true;
+        OverRunning = true;
         this.context = context;
         surfaceHolder = getHolder();
         paint = new Paint();
@@ -58,13 +64,21 @@ public class GameView extends SurfaceView implements Runnable {
             control();
             update();
             checkifnewBug();
-            control();
             checkCollision();
             control();
             checkTouch();
         }
+        while(OverRunning)
+        {
+            gameOver();
+            control();
+        }
+
     }
-    private void checkTouch() {
+
+
+
+    private boolean checkTouch() {
         if(previewY != GameStarter.TouchY || previewX != GameStarter.TouchX)
         {
             for(Bug b:bugs)
@@ -77,34 +91,45 @@ public class GameView extends SurfaceView implements Runnable {
                     {
                         for(Bug chooseb:chosedBugs)
                         {
-                            if(chooseb.equals(b))
+                            if(chooseb == b)
                             {
-                                return;
+                                return false;
                             }
                         }
-                        Log.d(MainActivity.TAG, String.valueOf(b.bugsType));
+                        b.ischecked = true;
                         chosedBugs.add(b);
-                        Log.d(MainActivity.TAG, String.valueOf(chosedBugs.size()));
                         if(chosedBugs.size() == 3)
                         {
-                            removeBugs();
+                            isdel = true;
                         }
                     }
                     else
                     {
-                        Log.d(MainActivity.TAG, String.valueOf("else"));
+                        for(Bug bug:chosedBugs)
+                        {
+                            bug.ischecked = false;
+                        }
                         chosedBugs.clear();
+                        b.ischecked = true;
                         chosedBugs.add(b);
                     }
                     currentBugtype = b.bugsType;
                 }
             }
+            if(isdel)
+            {
+                currentBugtype = null;
+                isdel = false;
+                removeBugs();
+            }
         }
+        return true;
     }
 
     private void removeBugs() {
         for(Bug b:chosedBugs)
         {
+            b.ischecked = false;
             bugs.remove(b);
         }
         chosedBugs.clear();
@@ -114,9 +139,15 @@ public class GameView extends SurfaceView implements Runnable {
     private void checkCollision() {
         for(Bug b:bugs)
         {
-           if( b.isCollision(human.x,human.y,human.size))gameRunning=false;
+           if( b.isCollision(human.x,human.y,human.size))
+               gameRunning=false;
+
+
         }
     }
+
+
+
     private void checkifnewBug() {
         if (currenttick == NEWBUGSPAWNTIMER) {
             currenttick = 0;
@@ -124,6 +155,7 @@ public class GameView extends SurfaceView implements Runnable {
         }
         currenttick++;
     }
+
     private void draw() {
         if (surfaceHolder.getSurface().isValid()) {
             if (firstTime) {
@@ -140,7 +172,7 @@ public class GameView extends SurfaceView implements Runnable {
             Bitmap bitmap = Bitmap.createScaledBitmap(
                     cBitmap, surfaceHolder.getSurfaceFrame().width(), surfaceHolder.getSurfaceFrame().height(), false);
             canvas.drawBitmap(bitmap, 0, 0, null);
-
+            checkmessage();
             human.drow(paint, canvas);
             for (Bug b : bugs) {
                 b.drow(paint, canvas);
@@ -150,14 +182,38 @@ public class GameView extends SurfaceView implements Runnable {
     }
     private void update() {
         for (Bug b : bugs) {
-            b.update(human.x, human.y);
+            b.update();
         }
     }
     private void control() {
         try {
-            gameThread.sleep(8);
+            gameThread.sleep(18);
         } catch (InterruptedException e) {
             e.printStackTrace();
+        }
+    }
+    private void checkmessage()
+    {
+        if(currentmesagetick < MESSAGEINTERVAL)
+        {
+            currentmesagetick++;
+            paint.setTextAlign(Paint.Align.CENTER);
+            paint.setTextSize(40);
+            canvas.drawText(" Catch the bugs. Combine 3 beetles of ",surfaceHolder.getSurfaceFrame().width()/2, 150, paint);
+            canvas.drawText(" the same color. Tap beetle to select",surfaceHolder.getSurfaceFrame().width()/2, 200, paint);
+        }
+    }
+    private void gameOver() {
+        if (surfaceHolder.getSurface().isValid()) {
+            canvas = surfaceHolder.lockCanvas();
+
+            Bitmap cBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.background3);
+
+            Bitmap bitmap = Bitmap.createScaledBitmap(
+                    cBitmap, surfaceHolder.getSurfaceFrame().width(), surfaceHolder.getSurfaceFrame().height(), false);
+            canvas.drawBitmap(bitmap, 0, 0, null);
+            canvas.drawText("Bug got to you, game over. Try it again. ", surfaceHolder.getSurfaceFrame().width() / 2, 300, paint);
+            surfaceHolder.unlockCanvasAndPost(canvas);
         }
     }
 }

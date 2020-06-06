@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.util.Log;
 
 import com.example.bugsgame.R;
+import com.example.bugsgame.activitys.GameStarter;
 import com.example.bugsgame.activitys.MainActivity;
 import com.example.bugsgame.gamelogik.GameView;
 import com.example.bugsgame.tools.BugsType;
@@ -16,6 +17,7 @@ import java.util.Random;
 
 public class Bug extends ViewObj {
     public BugsType bugsType;
+    public boolean ischecked = false;
 
     public Bug(Context context) {
         GetKoordinates();
@@ -24,10 +26,12 @@ public class Bug extends ViewObj {
     }
 
     public void GetKoordinates() {
-        speed = 0.12f;
+        speed = 0.15f;
         size = 3;
-        y = 12;
-        x = (int) (0 + Math.random() * GameView.maxX);
+        if(ischecked)
+            size = 4;
+        y = 16;
+        x = (int) (1 + Math.random() * (GameView.maxX-size));
     }
 
     public void ChooseBitmapId() {
@@ -53,11 +57,8 @@ public class Bug extends ViewObj {
         }
     }
 
-    public void update(float humanx, float humany) {
-        if(x < humanx)x+=speed;
-        if (x > humanx) x -= speed;
-        if (y < humany) y += speed;
-        if (y > humany) y -= speed;
+    public void update() {
+         y+=speed;
     }
 
     public void checkRotait() {
@@ -65,7 +66,8 @@ public class Bug extends ViewObj {
     }
 
     public boolean isCollision(float humanX, float humanY, float humansize) {
-        return !(((x + size / 2-1) < humanX) || (x > (humanX + humansize)) || ((y + size / 2-1) < humanY) || (y > (humanY + humansize)));
+       // return !(((x + size / 2-1) < humanX) || (x > (humanX + humansize)) || ((y + size / 2-1) < humanY) || (y > (humanY + humansize)));
+        return y+size/2 > GameView.maxY;
     }
     public boolean checktouchColission(float x, float y) {
         float maxX = (this.x + this.size)*GameView.unitW;

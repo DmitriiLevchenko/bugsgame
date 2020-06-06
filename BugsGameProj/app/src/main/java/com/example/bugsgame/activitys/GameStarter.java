@@ -48,6 +48,9 @@ public class GameStarter extends AppCompatActivity implements View.OnTouchListen
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        GameView.OverRunning = false;
+        GameView.gameRunning = false;
+
     }
 
 }
